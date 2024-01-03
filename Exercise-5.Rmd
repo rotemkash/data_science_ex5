@@ -1,0 +1,217 @@
+---
+title: "Exercise 8"
+author: "Rotem Kashani and Gal Drimer"
+date: "2023-05-14"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1
+
+#### 1.1
+
+Suppose a basketball player has a 70% free throw success rate. What is the probability that she makes exactly 2 out of 3 free throws?
+
+answer:
+
+P(x=2)=choose(3,2)x0.7^2x0.3=0.441
+
+#### 1.2
+
+Suppose a basketball player has a 33% free throw success rate. What is the probability that she will make as least 10 out of 30 free throws?
+
+answer:
+
+$$
+P(x=>10)=\displaystyle\sum_{k=10}^{20} \begin{pmatrix} 30 \\ k \end{pmatrix}
+\times (\frac {1} {3}) ^k\times (\frac {2} {3})^{30-k}=1-P(x<=9)=
+1-(P(x=0)+P(x=1)+...+P(x=9))
+$$
+P(x=>10)=
+```{r 1.2}
+1-pbinom(9,30,1/3)
+```
+
+## Question 2
+
+#### 2.1
+
+In a group of 20 people, 8 are left-handed. If 4 people are selected at
+random from the group, what is  the probability that exactly 2 of them are 
+left-handed?
+
+answer:
+
+P(x=2)=choose(4,2)x0.4^2 x0.6^2=0.3456
+
+
+#### 2.2
+
+A software company finds that 20% of its customers renew their annual 
+subscription. If the company has 1000 customers, what is the probability
+that between 190 and 220 of them renew their subscription (inclusive)?
+
+answer:
+$$
+P(190<=x<=220)=P(x<=220)-P(x<190)=
+\displaystyle\sum_{k=0}^{220} \begin{pmatrix} 1000 \\ k \end{pmatrix}
+\times 0.2^k\times 0.8^{1000-k}-\displaystyle\sum_{k=0}^{189} \begin{pmatrix} 
+1000 \\ k \end{pmatrix}\times 0.2^k\times 0.8^{1000-k}
+$$
+P(190<=x<=220)=
+```{r 2.2}
+pbinom(220,1000,0.2)-pbinom(189,1000,0.2)
+```
+
+#### 2.3
+
+A survey of 500 people found that 45% of them own a car. What is the
+probability that in a group of 8 people chosen at random, at most 3 
+(not inclusive) own a car?
+
+answer:
+
+P(x<3)=P(x=0)+P(x=1)+P(x=2)=choose(8,0)x0.45^0 x0.55^8 +choose(8,1)x0.45^1 x0.55^7 
++choose(8,2)x0.45^2 x0.55^6=0.22
+
+
+## Question 3
+
+#### 3.1
+
+What is the 90th percentile of the number of successes in 20 independent 
+Bernoulli trials with a probability of success of 0.3?
+
+answer:
+
+
+```{r 3.1}
+
+n <- 20
+p <- 0.3
+percentile <- 0.9
+
+k <- qbinom(percentile, size = n, prob = p, lower.tail = TRUE)
+
+k
+```
+
+#### 3.2
+
+If a fair coin is flipped 10 times, what is the maximum number of heads that
+can be obtained so that the probability of getting at least that many heads is
+less than or equal to 0.05?
+
+answer:
+
+
+```{r 3.2}
+
+n_flips <- 10
+alpha <- 0.05
+
+n_heads <- 0:n_flips
+a<-dbinom(n_heads, n_flips, 0.5)
+x <- pbinom(n_heads, n_flips, 0.5)
+max_heads <- max(n_heads[x <= 1 - alpha])
+max_heads
+```
+
+## Question 4
+
+A study done on the AmaZona website found that the chance that an Israeli user 
+who enters the website will also buy a product is 0.2. Calculate:
+
+
+#### 4.1
+
+The probability that after 8 logins a random Israeli user bought 3 products
+
+answer:
+
+P(x=3)=choose(8,3)x0.2^3 x0.8^5=0.146
+
+#### 4.2
+
+The expected value (E[X]) and variance of the number of items bought by an 
+Israeli user after 12 visits to the site?
+
+answer:
+
+E[x]=12x0.2=2.4
+
+Var[X] = 12x0.2x0.8=1.92
+
+#### 4.3
+
+What is the probability that an Israeli user bought his third item exactly on
+his sixth visit to the site?
+
+answer:
+
+P(x=6)=choose(5,2)x 0.2^2 x0.8^3 x0.2=0.04096
+
+
+## Question 5
+
+Suppose there are four white balls and four black balls in an urn.
+You randomly select four balls without replacement. If the selection contains
+one white ball and three black balls, you stop. Otherwise, you return the balls 
+to the pool and repeat the process. What is the probability that it will take
+more than n attempts to stop?
+
+answer:
+
+A-1 white and 3 black
+
+x- number of trials until first succcess
+
+P(A)= (choose(4,1)x choose(4,3))/choose(8,4) = 8/35
+
+$$
+P(x>n)=1-P(x<=n)=
+1-\displaystyle\sum_{k=0}^{n} \begin{pmatrix} 
+1-\frac {8} {35} \end{pmatrix}^{k-1}\times \frac {8} {35}
+$$ 
+## Question 6
+
+Matilda is teaching Jorgina how to play ping-pong. Jorgina has a 60% chance of scoring a point against Matilda. They will play until Jorgina scores 5 points
+and then stop. Assuming that the points are independent:
+
+
+#### 6.1
+
+What is the probability that they will play 10 games?
+
+answer:
+
+we define 2 situations:
+
+A= Jorgina scores 4 points in first 9 games.
+
+B=Jorgina scores 5th point in 10th game.
+
+C= 10 games
+
+P(A)=P(X=4) = choose(9, 4)x0.6^4 x0.4^5 =0.167
+
+P(B)=0.6
+
+P(C)=0.167x0.6=0.1
+
+#### 6.2
+
+Find the expected value and variance of the number of games played until they 
+stop.
+
+answer:
+
+E[x]=5/0.6=25/3
+
+Var[x]= 5x0.4/0.36=50/9
+
+
+# Good luck!
